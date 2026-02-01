@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ListSuggestionComponent } from "./core/list-suggestion/list-suggestion.component";
 
 @Component({
   selector: 'app-root',

@@ -1,0 +1,11 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background: #f3f5f7;
+}
+
+.page {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 26px 18px;
+}
