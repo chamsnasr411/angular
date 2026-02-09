@@ -1,0 +1,36 @@
+<div class="page">
+
+  <a routerLink="/suggestions" class="back-link">
+    ← Back to list
+  </a>
+
+  <div class="details-card">
+
+    <h1>{{ suggestion?.title }}</h1>
+
+    <div class="badges">
+      <span class="badge category">{{ suggestion?.category }}</span>
+      <span class="badge status">{{ suggestion?.status }}</span>
+    </div>
+
+    <div class="details-grid">
+      <div class="details-item">
+        📅 <strong>Date :</strong> {{ suggestion?.date | date:'dd/MM/yyyy' }}
+      </div>
+
+      <div class="details-item">
+        👍 <strong>Likes :</strong> {{ suggestion?.nbLikes }}
+      </div>
+    </div>
+
+    <div class="description">
+      <strong>Description</strong><br />
+      {{ suggestion?.description }}
+    </div>
+
+    <div class="likes">
+      ❤️ {{ suggestion?.nbLikes }} people like this idea
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,61 @@
+<div class="page">
+
+  <h2 class="page-title">Liste des suggestions</h2>
+
+  <div class="search-bar">
+    <input
+      type="text"
+      [(ngModel)]="searchText"
+      placeholder="Rechercher une suggestion (titre ou catégorie)"
+    />
+  </div>
+
+  <div class="grid">
+    <div class="card" *ngFor="let s of suggestions" [hidden]="!matchesSearch(s)">
+
+      <!-- Badge status -->
+      <span class="status"
+            [ngClass]="{
+              'ok': s.status === 'acceptee',
+              'wait': s.status === 'en_attente',
+              'no': s.status === 'refusee'
+            }">
+        {{ s.status }}
+      </span>
+
+      <h3 class="title">{{ s.title }}</h3>
+
+      <div class="meta">
+        <span class="cat">{{ s.category }}</span>
+        <span class="date">{{ s.date | date:'dd MMM yyyy' }}</span>
+      </div>
+
+      <p class="desc">{{ s.description }}</p>
+
+      <div class="actions">
+        <button class="btn primary" [routerLink]="['/suggestions', s.id]">
+          Details
+        </button>
+
+        <button class="btn" (click)="likeSuggestion(s)" [disabled]="!canInteract(s)">
+          👍 Like {{ s.nbLikes }}
+        </button>
+
+        <button class="btn" (click)="addToFavorites(s)" [disabled]="!canInteract(s)">
+          ⭐ Favoris
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="favorites">
+    <h3>Favoris ({{ favorites.length }})</h3>
+    <ul>
+      <li *ngFor="let f of favorites">
+        {{ f.title }} ({{ f.category }})
+      </li>
+    </ul>
+  </div>
+
+</div>
