@@ -7,11 +7,10 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent },
 
   {
-    path: 'suggestions',
-    loadChildren: () =>
-      import('./features/suggestions/suggestions.module')
-        .then(m => m.SuggestionsModule)
-  },
+  path: 'suggestions',
+  loadChildren: () => import('./features/suggestions/suggestions.module')
+    .then(m => m.SuggestionsModule)
+},
 
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: '**', component: NotfoundComponent }

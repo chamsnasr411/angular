@@ -1,7 +1,16 @@
 <div class="page">
 
-  <h2 class="page-title">Liste des suggestions</h2>
+  <!-- ===== TOP BAR ===== -->
+   <div class="page-header">
+    <h2 class="page-title">Liste des suggestions</h2>
 
+    <!-- ✅ lien absolu stable -->
+   
+    <button class="btn primary" [routerLink]="['/suggestions/new']">+ Nouvelle suggestion</button>
+  </div>
+
+
+  <!-- ===== SEARCH ===== -->
   <div class="search-bar">
     <input
       type="text"
@@ -10,10 +19,15 @@
     />
   </div>
 
-  <div class="grid">
-    <div class="card" *ngFor="let s of suggestions" [hidden]="!matchesSearch(s)">
 
-      <!-- Badge status -->
+  <!-- ===== GRID CARDS ===== -->
+  <div class="grid">
+
+    <div class="card"
+         *ngFor="let s of suggestions"
+         [hidden]="!matchesSearch(s)">
+
+      <!-- Status badge -->
       <span class="status"
             [ngClass]="{
               'ok': s.status === 'acceptee',
@@ -23,39 +37,62 @@
         {{ s.status }}
       </span>
 
+      <!-- Title -->
       <h3 class="title">{{ s.title }}</h3>
 
+      <!-- Meta -->
       <div class="meta">
         <span class="cat">{{ s.category }}</span>
         <span class="date">{{ s.date | date:'dd MMM yyyy' }}</span>
       </div>
 
-      <p class="desc">{{ s.description }}</p>
+      <!-- Description -->
+      <p class="desc">
+        {{ s.description }}
+      </p>
 
+      <!-- Actions -->
       <div class="actions">
-        <button class="btn primary" [routerLink]="['/suggestions', s.id]">
-          Details
-        </button>
 
-        <button class="btn" (click)="likeSuggestion(s)" [disabled]="!canInteract(s)">
+        
+
+        <button class="btn primary" [routerLink]="['/suggestions/details', s.id]">Details</button>
+        <button class="btn"
+                (click)="likeSuggestion(s)"
+                [disabled]="!canInteract(s)">
           👍 Like {{ s.nbLikes }}
         </button>
 
-        <button class="btn" (click)="addToFavorites(s)" [disabled]="!canInteract(s)">
+        <button class="btn"
+                (click)="addToFavorites(s)"
+                [disabled]="!canInteract(s)">
           ⭐ Favoris
         </button>
+
       </div>
 
     </div>
   </div>
 
+
+  <!-- ===== FAVORITES SECTION ===== -->
   <div class="favorites">
-    <h3>Favoris ({{ favorites.length }})</h3>
-    <ul>
+
+    <h3>
+      ⭐ Favoris ({{ favorites.length }})
+    </h3>
+
+    <div *ngIf="favorites.length === 0" class="empty">
+      Aucune suggestion en favoris pour le moment.
+    </div>
+
+    <ul *ngIf="favorites.length > 0">
       <li *ngFor="let f of favorites">
-        {{ f.title }} ({{ f.category }})
+        <span class="fav-title">{{ f.title }}</span>
+        <span class="fav-cat">({{ f.category }})</span>
       </li>
     </ul>
+
   </div>
 
 </div>

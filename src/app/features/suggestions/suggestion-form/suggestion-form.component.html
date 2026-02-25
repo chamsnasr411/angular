@@ -1,0 +1,57 @@
+<div class="page">
+  <div class="card">
+    <div class="card-header">
+      <h1>Ajouter une suggestion</h1>
+      <p>Remplissez le formulaire ci-dessous.</p>
+    </div>
+
+    <form [formGroup]="suggestionForm" (ngSubmit)="onSubmit()" class="form">
+
+      <div class="field">
+        <label for="title">Titre</label>
+        <input id="title" type="text" formControlName="title" />
+        <div class="error" *ngIf="title?.touched && title?.invalid">
+          <span *ngIf="title?.errors?.['required']">Le titre est obligatoire.</span>
+          <span *ngIf="title?.errors?.['minlength']">Minimum 5 caractères.</span>
+          <span *ngIf="title?.errors?.['pattern']">Commence par une majuscule, lettres uniquement.</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="description">Description</label>
+        <textarea id="description" rows="5" formControlName="description"></textarea>
+        <div class="error" *ngIf="description?.touched && description?.invalid">
+          <span *ngIf="description?.errors?.['required']">La description est obligatoire.</span>
+          <span *ngIf="description?.errors?.['minlength']">Minimum 30 caractères.</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="category">Catégorie</label>
+        <select id="category" formControlName="category">
+          <option value="">-- Sélectionnez une catégorie --</option>
+          <option *ngFor="let c of categories" [value]="c">{{ c }}</option>
+        </select>
+        <div class="error" *ngIf="category?.touched && category?.invalid">
+          <span *ngIf="category?.errors?.['required']">La catégorie est obligatoire.</span>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label>Date</label>
+          <input type="text" [value]="suggestionForm.value.date | date:'dd/MM/yyyy'" readonly />
+        </div>
+
+        <div class="field">
+          <label>Status</label>
+          <input type="text" [value]="suggestionForm.value.status" readonly />
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="suggestionForm.invalid">Soumettre</button>
+      <a routerLink="/suggestions">Annuler</a>
+
+    </form>
+  </div>
+</div>
