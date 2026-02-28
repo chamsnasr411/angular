@@ -6,10 +6,11 @@ import { SuggestionDetailsComponent } from './suggestion-details/suggestion-deta
 
  const routes: Routes = [
   { path: '', component: SuggestionListComponent, pathMatch: 'full' },
+  { path: 'details/:id', component: SuggestionDetailsComponent },
 
   { path: 'new', component: SuggestionFormComponent },
+  { path: 'update/:id', component: SuggestionFormComponent }
 
-  { path: 'details/:id', component: SuggestionDetailsComponent }
 ];
 
 @NgModule({
@@ -17,3 +18,5 @@ import { SuggestionDetailsComponent } from './suggestion-details/suggestion-deta
   exports: [RouterModule]
 })
 export class SuggestionsRoutingModule {}
+
+

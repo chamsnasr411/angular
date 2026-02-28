@@ -1,98 +1,63 @@
 <div class="page">
+  <div class="page-header">
+    <h2>Liste des suggestions</h2>
 
-  <!-- ===== TOP BAR ===== -->
-   <div class="page-header">
-    <h2 class="page-title">Liste des suggestions</h2>
-
-    <!-- ✅ lien absolu stable -->
-   
-    <button class="btn primary" [routerLink]="['/suggestions/new']">+ Nouvelle suggestion</button>
+    <!-- ✅ RELATIF au module -->
+    <button class="btn primary" [routerLink]="['new']">+ Nouvelle suggestion</button>
   </div>
 
-
-  <!-- ===== SEARCH ===== -->
   <div class="search-bar">
-    <input
-      type="text"
-      [(ngModel)]="searchText"
-      placeholder="Rechercher une suggestion (titre ou catégorie)"
-    />
+    <input [(ngModel)]="searchText" placeholder="Rechercher (titre/catégorie)" />
   </div>
 
-
-  <!-- ===== GRID CARDS ===== -->
   <div class="grid">
+    <div class="card" *ngFor="let s of suggestions">
+      <ng-container *ngIf="matchesSearch(s)">
+        <span class="status"
+              [ngClass]="{
+                'ok': s.status === 'acceptee',
+                'wait': s.status === 'en_attente',
+                'no': s.status === 'refusee'
+              }">
+          {{ s.status }}
+        </span>
 
-    <div class="card"
-         *ngFor="let s of suggestions"
-         [hidden]="!matchesSearch(s)">
+        <h3>{{ s.title }}</h3>
 
-      <!-- Status badge -->
-      <span class="status"
-            [ngClass]="{
-              'ok': s.status === 'acceptee',
-              'wait': s.status === 'en_attente',
-              'no': s.status === 'refusee'
-            }">
-        {{ s.status }}
-      </span>
+        <div class="meta">
+          <span>{{ s.category }}</span>
+          <span>{{ s.date | date:'dd MMM yyyy' }}</span>
+        </div>
 
-      <!-- Title -->
-      <h3 class="title">{{ s.title }}</h3>
+        <p>{{ s.description }}</p>
 
-      <!-- Meta -->
-      <div class="meta">
-        <span class="cat">{{ s.category }}</span>
-        <span class="date">{{ s.date | date:'dd MMM yyyy' }}</span>
-      </div>
+        <div class="actions">
+          <!-- ✅ RELATIF -->
+          <button class="btn primary" [routerLink]="['details', s.id]">Details</button>
 
-      <!-- Description -->
-      <p class="desc">
-        {{ s.description }}
-      </p>
+          <button class="btn" (click)="deleteSuggestion(s.id)" [disabled]="!canInteract(s)">
+            🗑 Supprimer
+          </button>
 
-      <!-- Actions -->
-      <div class="actions">
+          <button class="btn" (click)="likeSuggestion(s)" [disabled]="!canInteract(s)">
+            👍 Like {{ s.nbLikes }}
+          </button>
 
-        
-
-        <button class="btn primary" [routerLink]="['/suggestions/details', s.id]">Details</button>
-        <button class="btn"
-                (click)="likeSuggestion(s)"
-                [disabled]="!canInteract(s)">
-          👍 Like {{ s.nbLikes }}
-        </button>
-
-        <button class="btn"
-                (click)="addToFavorites(s)"
-                [disabled]="!canInteract(s)">
-          ⭐ Favoris
-        </button>
-
-      </div>
-
+          <button class="btn" (click)="addToFavorites(s)" [disabled]="!canInteract(s)">
+            ⭐ Favoris
+          </button>
+        </div>
+      </ng-container>
     </div>
   </div>
 
-
-  <!-- ===== FAVORITES SECTION ===== -->
   <div class="favorites">
+    <h3>⭐ Favoris ({{ favorites.length }})</h3>
 
-    <h3>
-      ⭐ Favoris ({{ favorites.length }})
-    </h3>
-
-    <div *ngIf="favorites.length === 0" class="empty">
-      Aucune suggestion en favoris pour le moment.
-    </div>
+    <div *ngIf="favorites.length === 0">Aucun favori.</div>
 
     <ul *ngIf="favorites.length > 0">
-      <li *ngFor="let f of favorites">
-        <span class="fav-title">{{ f.title }}</span>
-        <span class="fav-cat">({{ f.category }})</span>
-      </li>
+      <li *ngFor="let f of favorites">{{ f.title }} ({{ f.category }})</li>
     </ul>
-
   </div>
-
 </div>

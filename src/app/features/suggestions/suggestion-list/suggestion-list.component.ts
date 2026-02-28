@@ -1,69 +1,57 @@
-
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Suggestion } from '../../../models/suggestion';
+import { SuggestionService } from '../../../core/services/suggestion.service';
+
 @Component({
   selector: 'app-suggestion-list',
   templateUrl: './suggestion-list.component.html',
   styleUrls: ['./suggestion-list.component.css']
 })
-export class SuggestionListComponent {
-
+export class SuggestionListComponent implements OnInit {
   searchText = '';
   favorites: Suggestion[] = [];
+  suggestions: Suggestion[] = [];
 
-  suggestions: Suggestion[] = [
-    {
-      id: 1,
-      title: 'Organiser une journée team building',
-      description: 'Suggestion pour organiser une journée de team building.',
-      category: 'Événements',
-      date: new Date('2025-01-20'),
-      status: 'acceptee',
-      nbLikes: 10
-    },
-    {
-      id: 2,
-      title: 'Améliorer le système de réservation',
-      description: 'Proposition pour améliorer la gestion des réservations.',
-      category: 'Technologie',
-      date: new Date('2025-01-15'),
-      status: 'refusee',
-      nbLikes: 0
-    },
-    {
-      id: 3,
-      title: 'Créer un système de récompenses',
-      description: 'Programme de récompenses pour motiver les employés.',
-      category: 'Ressources Humaines',
-      date: new Date('2025-01-25'),
-      status: 'refusee',
-      nbLikes: 0
-    },
-    {
-      id: 4,
-      title: "Moderniser l'interface utilisateur",
-      description: "Refonte complète de l’interface utilisateur.",
-      category: 'Technologie',
-      date: new Date('2025-01-30'),
-      status: 'en_attente',
-      nbLikes: 0
-    }
-  ];
+  constructor(private service: SuggestionService) {}
 
-  likeSuggestion(s: Suggestion) {
-    s.nbLikes++;
+ ngOnInit(): void {
+  this.service.getSuggestionsFromApi().subscribe({
+    next: (data: Suggestion[]) => (this.suggestions = data),
+    error: (err) => console.error(err)
+  });
+
+}
+  loadFromApi(): void {
+    this.service.getSuggestionsFromApi().subscribe({
+      next: (data) => (this.suggestions = data),
+      error: (err) => console.error('GET all error', err)
+    });
   }
 
-  addToFavorites(s: Suggestion) {
-    if (!this.favorites.some(f => f.id === s.id)) {
-      this.favorites.push(s);
-    }
+  likeSuggestion(s: Suggestion): void {
+    if (!this.canInteract(s)) return;
+
+    this.service.likeSuggestion(s).subscribe({
+      next: (updated) => (s.nbLikes = updated.nbLikes),
+      error: (err) => console.error('LIKE error', err)
+    });
+  }
+
+  deleteSuggestion(id: number): void {
+    this.service.deleteSuggestion(id).subscribe({
+      next: () => this.loadFromApi(),
+      error: (err) => console.error('DELETE error', err)
+    });
+  }
+
+  addToFavorites(s: Suggestion): void {
+    if (!this.favorites.some(f => f.id === s.id)) this.favorites.push(s);
   }
 
   matchesSearch(s: Suggestion): boolean {
     const q = this.searchText.trim().toLowerCase();
     if (!q) return true;
-    return s.title.toLowerCase().includes(q) || s.category.toLowerCase().includes(q);
+    return (s.title ?? '').toLowerCase().includes(q) || (s.category ?? '').toLowerCase().includes(q);
   }
 
   canInteract(s: Suggestion): boolean {

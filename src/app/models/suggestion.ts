@@ -1,9 +1,10 @@
 export interface Suggestion {
-     id: number;
+  id: number;
+    suggestion: string;   // ✅ obligatoire
   title: string;
   description: string;
   category: string;
-  date: Date;
+  date: string;   // ✅ IMPORTANT : string et pas Date
   status: string;
   nbLikes: number;
 }

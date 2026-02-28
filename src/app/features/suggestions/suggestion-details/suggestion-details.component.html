@@ -1,36 +1,30 @@
 <div class="page">
+<a [routerLink]="['../../']">← Back to list</a>
+  <div class="actions">
+<button class="btn primary"
+        *ngIf="suggestion as s"
+        [routerLink]="['/suggestions', 'update', s.id]"
+        [disabled]="!s.id">
+  Update
+</button>
+  </div>
 
-  <a routerLink="/suggestions" class="back-link">
-    ← Back to list
-  </a>
+  <div *ngIf="suggestion as s" class="details-card">
+    <h1>{{ s.title }}</h1>
 
-  <div class="details-card">
-
-    <h1>{{ suggestion?.title }}</h1>
-
-    <div class="badges">
-      <span class="badge category">{{ suggestion?.category }}</span>
-      <span class="badge status">{{ suggestion?.status }}</span>
+    <div>
+      <strong>Category:</strong> {{ s.category }} |
+      <strong>Status:</strong> {{ s.status }}
     </div>
 
-    <div class="details-grid">
-      <div class="details-item">
-        📅 <strong>Date :</strong> {{ suggestion?.date | date:'dd/MM/yyyy' }}
-      </div>
-
-      <div class="details-item">
-        👍 <strong>Likes :</strong> {{ suggestion?.nbLikes }}
-      </div>
+    <div>
+      <strong>Date:</strong> {{ s.date | date:'dd/MM/yyyy' }}
     </div>
 
-    <div class="description">
-      <strong>Description</strong><br />
-      {{ suggestion?.description }}
+    <div>
+      <strong>Likes:</strong> {{ s.nbLikes }}
     </div>
 
-    <div class="likes">
-      ❤️ {{ suggestion?.nbLikes }} people like this idea
-    </div>
-
+    <p><strong>Description</strong><br />{{ s.description }}</p>
   </div>
 </div>

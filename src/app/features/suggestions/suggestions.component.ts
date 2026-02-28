@@ -7,5 +7,5 @@ import { RouterOutlet } from "@angular/router";
   styleUrl: './suggestions.component.css',
 })
 export class SuggestionsComponent {
-
 }
+export {};

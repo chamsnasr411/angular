@@ -1,57 +1,90 @@
 <div class="page">
-  <div class="card">
-    <div class="card-header">
-      <h1>Ajouter une suggestion</h1>
-      <p>Remplissez le formulaire ci-dessous.</p>
+  <a class="back-link" [routerLink]="['../']">← Back to list</a>
+
+  <h1 class="page-title">{{ isEditMode ? 'Update suggestion' : 'Add new suggestion' }}</h1>
+
+  <form class="card" [formGroup]="form" (ngSubmit)="save()">
+
+    <!-- Title -->
+    <div class="field">
+      <label class="label">Title</label>
+      <input
+        class="input"
+        type="text"
+        formControlName="title"
+        placeholder="Ex: Moderniser l’interface utilisateur"
+      />
+      <div class="error" *ngIf="isInvalid('title')">
+        <span *ngIf="form.get('title')?.errors?.['required']">Title is required.</span>
+        <span *ngIf="form.get('title')?.errors?.['minlength']">Min 3 characters.</span>
+        <span *ngIf="form.get('title')?.errors?.['maxlength']">Max 60 characters.</span>
+      </div>
     </div>
 
-    <form [formGroup]="suggestionForm" (ngSubmit)="onSubmit()" class="form">
-
-      <div class="field">
-        <label for="title">Titre</label>
-        <input id="title" type="text" formControlName="title" />
-        <div class="error" *ngIf="title?.touched && title?.invalid">
-          <span *ngIf="title?.errors?.['required']">Le titre est obligatoire.</span>
-          <span *ngIf="title?.errors?.['minlength']">Minimum 5 caractères.</span>
-          <span *ngIf="title?.errors?.['pattern']">Commence par une majuscule, lettres uniquement.</span>
-        </div>
+    <!-- Description -->
+    <div class="field">
+      <label class="label">Description</label>
+      <textarea
+        class="textarea"
+        rows="5"
+        formControlName="description"
+        placeholder="Décris ta suggestion…"
+      ></textarea>
+      <div class="error" *ngIf="isInvalid('description')">
+        <span *ngIf="form.get('description')?.errors?.['required']">Description is required.</span>
+        <span *ngIf="form.get('description')?.errors?.['minlength']">Min 10 characters.</span>
+        <span *ngIf="form.get('description')?.errors?.['maxlength']">Max 500 characters.</span>
       </div>
+    </div>
 
-      <div class="field">
-        <label for="description">Description</label>
-        <textarea id="description" rows="5" formControlName="description"></textarea>
-        <div class="error" *ngIf="description?.touched && description?.invalid">
-          <span *ngIf="description?.errors?.['required']">La description est obligatoire.</span>
-          <span *ngIf="description?.errors?.['minlength']">Minimum 30 caractères.</span>
-        </div>
+    <!-- Category -->
+    <div class="field">
+      <label class="label">Category</label>
+      <input
+        class="input"
+        type="text"
+        formControlName="category"
+        placeholder="Ex: Technologie"
+      />
+      <div class="error" *ngIf="isInvalid('category')">
+        <span *ngIf="form.get('category')?.errors?.['required']">Category is required.</span>
+        <span *ngIf="form.get('category')?.errors?.['minlength']">Min 2 characters.</span>
       </div>
+    </div>
 
-      <div class="field">
-        <label for="category">Catégorie</label>
-        <select id="category" formControlName="category">
-          <option value="">-- Sélectionnez une catégorie --</option>
-          <option *ngFor="let c of categories" [value]="c">{{ c }}</option>
-        </select>
-        <div class="error" *ngIf="category?.touched && category?.invalid">
-          <span *ngIf="category?.errors?.['required']">La catégorie est obligatoire.</span>
-        </div>
+    <!-- Date -->
+    <div class="field">
+      <label class="label">Date</label>
+      <input class="input" type="date" formControlName="date" />
+      <div class="error" *ngIf="isInvalid('date')">
+        <span *ngIf="form.get('date')?.errors?.['required']">Date is required.</span>
       </div>
+    </div>
 
-      <div class="grid-2">
-        <div class="field">
-          <label>Date</label>
-          <input type="text" [value]="suggestionForm.value.date | date:'dd/MM/yyyy'" readonly />
-        </div>
-
-        <div class="field">
-          <label>Status</label>
-          <input type="text" [value]="suggestionForm.value.status" readonly />
-        </div>
+    <!-- Status -->
+    <div class="field">
+      <label class="label">Status</label>
+      <select class="select" formControlName="status">
+        <option value="en_attente">en_attente</option>
+        <option value="acceptee">acceptee</option>
+        <option value="refusee">refusee</option>
+      </select>
+      <div class="error" *ngIf="isInvalid('status')">
+        <span *ngIf="form.get('status')?.errors?.['required']">Status is required.</span>
       </div>
+    </div>
 
-      <button type="submit" [disabled]="suggestionForm.invalid">Soumettre</button>
-      <a routerLink="/suggestions">Annuler</a>
+    <!-- Actions -->
+    <div class="actions">
+     <h2>{{ isEditMode ? 'Update suggestion' : 'Add new suggestion' }}</h2>
 
-    </form>
-  </div>
+<button class="btn primary" type="submit">
+  {{ isEditMode ? 'Save update' : 'Add suggestion' }}
+</button>
+      <button class="btn" type="button" (click)="cancel()">
+        Cancel
+      </button>
+    </div>
+
+  </form>
 </div>
